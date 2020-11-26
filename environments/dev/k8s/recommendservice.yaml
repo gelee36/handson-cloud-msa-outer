@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eshop-recommendservice
+spec:
+  selector:
+    matchLabels:
+      app: eshop-recommendservice
+  template:
+    metadata:
+      labels:
+        app: eshop-recommendservice
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+      - name: eshop-recommendservice
+        image: gcr.io/architect-certification-289902/22/eshop-recommendservice@sha256:0b5634cfc1887a48715beb7c7a111092d930030e00b62bf762432bc2e99a21f6
+        ports:
+        - containerPort: 8093
+        env:
+          - name: URL_PRODUCTSERVICE
+            value: http://eshop-productservice:8092
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: eshop-recommendservice
+spec:
+  type: ClusterIP
+  selector:
+    app: eshop-recommendservice
+  ports:
+  - name: api
+    port: 8093
+    targetPort: 8093
